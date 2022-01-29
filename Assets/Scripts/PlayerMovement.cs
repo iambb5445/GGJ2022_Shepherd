@@ -13,7 +13,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     float groundCheckDistance = 0.4f;
     [SerializeField]
-    LayerMask layerMask;
+    LayerMask groundLayerMask;
     [SerializeField]
     float jumpHeight = 3f;
 
@@ -22,7 +22,6 @@ public class PlayerMovement : MonoBehaviour
     bool isGrounded;
     void Start()
     {
-        
     }
 
     void Update()
@@ -34,7 +33,7 @@ public class PlayerMovement : MonoBehaviour
 
         characterController.Move(move * speed * Time.deltaTime);
 
-        isGrounded = Physics.CheckSphere(groundCheck.position, groundCheckDistance, layerMask);
+        isGrounded = Physics.CheckSphere(groundCheck.position, groundCheckDistance, groundLayerMask);
         if (isGrounded && velocity.y < 0)
         {
             velocity.y = -2f;

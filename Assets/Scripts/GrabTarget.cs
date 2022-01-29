@@ -6,6 +6,20 @@ public class GrabTarget : MonoBehaviour
 {
     [SerializeField]
     GameObject highlight;
+    [SerializeField]
+    Transform groundCheck;
+    [SerializeField]
+    LayerMask groundLayerMask;
+    [SerializeField]
+    float groundCheckDistance = 0.4f;
+    [SerializeField]
+    CharacterController characterController;
+    [SerializeField]
+    float gravityCoefficient = 1f;
+
+    Vector3 velocity;
+    float gravity = -9.81f;
+    bool isGrounded;
 
     Transform holdPoint = null;
 
@@ -19,12 +33,12 @@ public class GrabTarget : MonoBehaviour
         highlight.SetActive(false);
     }
 
-    public void grabed(Transform holdPoint)
+    public void grab(Transform holdPoint)
     {
         this.holdPoint = holdPoint;
     }
 
-    public void released()
+    public void release()
     {
         this.holdPoint = null;
     }
@@ -37,7 +51,19 @@ public class GrabTarget : MonoBehaviour
     {
         if (holdPoint != null)
         {
+            Debug.Log("grabed");
             transform.position = holdPoint.position;
+        }
+        else
+        {
+            Debug.Log("notGrabed");
+            isGrounded = Physics.CheckSphere(groundCheck.position, groundCheckDistance, groundLayerMask);
+            if (isGrounded && velocity.y < 0)
+            {
+                velocity.y = -2f;
+            }
+            velocity.y += gravity * Time.deltaTime * gravityCoefficient;
+            characterController.Move(velocity * Time.deltaTime);
         }
     }
 }

@@ -35,11 +35,13 @@ public class Grabber : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Mouse0) && grabTarget != null)
         {
-            grabTarget.grabed(holdPoint);
+            grabTarget.notUnderTarget();
+            grabTarget.grab(holdPoint);
         }
         else if (Input.GetKeyUp(KeyCode.Mouse0) && grabTarget != null)
         {
-            grabTarget.released();
+            grabTarget.release();
+            grabTarget.underTarget();
         }
     }
 }
