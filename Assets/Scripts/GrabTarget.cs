@@ -43,12 +43,24 @@ public class GrabTarget : MonoBehaviour
 
     public void release()
     {
-        this.holdPoint = null;
+        holdPoint = null;
         velocity = possibleThrow * throwSpeed;
     }
 
     void Start()
     {
+    }
+
+    Vector3 clampAboveGround(Vector3 position)
+    {
+        Vector3 transformToGroundCheck = transform.position - groundCheck.position;
+        Vector3 toBeGroundCheck = position - transformToGroundCheck;
+        Physics.Raycast(toBeGroundCheck, Vector3.up, out RaycastHit hitInfo, 10f, groundLayerMask);
+        if (hitInfo.collider != null)
+        {
+            return hitInfo.point + transformToGroundCheck;
+        }
+        return position;
     }
 
     void Update()
@@ -57,10 +69,7 @@ public class GrabTarget : MonoBehaviour
         if (holdPoint != null)
         {
             Vector3 holdPosition = holdPoint.position;
-            if (isGrounded)
-            {
-                holdPosition.y = Mathf.Max(transform.position.y, holdPosition.y);
-            }
+            holdPosition = clampAboveGround(holdPosition);
             possibleThrow = holdPosition - transform.position;
             transform.position = holdPosition;
         }

@@ -10,6 +10,7 @@ public class Grabber : MonoBehaviour
     Transform holdPoint;
 
     GrabTarget lastGrabTarget = null;
+    GrabTarget grabbed = null;
     void Update()
     {
         GrabTarget grabTarget = null;
@@ -37,11 +38,16 @@ public class Grabber : MonoBehaviour
         {
             grabTarget.notUnderTarget();
             grabTarget.grab(holdPoint);
+            grabbed = grabTarget;
         }
-        else if (Input.GetKeyUp(KeyCode.Mouse0) && grabTarget != null)
+        else if (Input.GetKeyUp(KeyCode.Mouse0) && grabbed != null)
         {
-            grabTarget.release();
-            grabTarget.underTarget();
+            grabbed.release();
+            if (grabTarget != null)
+            {
+                grabTarget.underTarget();
+            }
+            grabbed = null;
         }
     }
 }
