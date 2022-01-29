@@ -16,10 +16,13 @@ public class GrabTarget : MonoBehaviour
     CharacterController characterController;
     [SerializeField]
     float gravityCoefficient = 1f;
+    [SerializeField]
+    float throwSpeed = 10f;
 
     Vector3 velocity;
     float gravity = -9.81f;
     bool isGrounded;
+    Vector3 possibleThrow;
 
     Transform holdPoint = null;
 
@@ -41,6 +44,7 @@ public class GrabTarget : MonoBehaviour
     public void release()
     {
         this.holdPoint = null;
+        velocity = possibleThrow * throwSpeed;
     }
 
     void Start()
@@ -49,15 +53,22 @@ public class GrabTarget : MonoBehaviour
 
     void Update()
     {
+        isGrounded = Physics.CheckSphere(groundCheck.position, groundCheckDistance, groundLayerMask);
         if (holdPoint != null)
         {
-            transform.position = holdPoint.position;
+            Vector3 holdPosition = holdPoint.position;
+            if (isGrounded)
+            {
+                holdPosition.y = Mathf.Max(transform.position.y, holdPosition.y);
+            }
+            possibleThrow = holdPosition - transform.position;
+            transform.position = holdPosition;
         }
         else
         {
-            isGrounded = Physics.CheckSphere(groundCheck.position, groundCheckDistance, groundLayerMask);
-            if (isGrounded && velocity.y < 0)
+            if (isGrounded)
             {
+                velocity = Vector3.zero;
                 velocity.y = -2f;
             }
             velocity.y += gravity * Time.deltaTime * gravityCoefficient;

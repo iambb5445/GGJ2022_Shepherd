@@ -201,7 +201,7 @@ GameObject:
   - component: {fileID: 357518637}
   - component: {fileID: 357518636}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -848,6 +848,7 @@ MonoBehaviour:
   groundCheckDistance: 0.4
   characterController: {fileID: 1096201462}
   gravityCoefficient: 0.5
+  throwSpeed: 10
 --- !u!143 &1096201462
 CharacterController:
   m_ObjectHideFlags: 0
@@ -990,7 +991,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1510171255}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 2}
+  m_LocalPosition: {x: 0, y: 0, z: 2.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 963194228}
