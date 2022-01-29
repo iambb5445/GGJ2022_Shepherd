@@ -51,12 +51,10 @@ public class GrabTarget : MonoBehaviour
     {
         if (holdPoint != null)
         {
-            Debug.Log("grabed");
             transform.position = holdPoint.position;
         }
         else
         {
-            Debug.Log("notGrabed");
             isGrounded = Physics.CheckSphere(groundCheck.position, groundCheckDistance, groundLayerMask);
             if (isGrounded && velocity.y < 0)
             {
