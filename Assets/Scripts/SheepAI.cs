@@ -23,22 +23,115 @@ public class SheepAI : MonoBehaviour
     CharacterController characterController;
     [SerializeField]
     LayerMask groundLayerMask;
+    [SerializeField]
+    Material damagedMaterial;
+    [SerializeField]
+    Renderer[] damagables;
+    [SerializeField]
+    AudioSource audioSource;
+    [SerializeField]
+    AudioSource hit;
 
     Vector3 destination;
     float stopTimer;
+    float soundTimer;
     State state;
     NavMeshPath path;
     int navmeshIndex;
     Vector3 tempDestination;
+    public static List<GameObject> sheepList = new List<GameObject>();
+    float lastDamage = 0f;
+    float health = 100f;
+    public bool isDead = false;
+    Material mainMaterial;
+    public static NavMeshPath getNearestSheepPath(Vector3 position)
+    {
+        float bestDistance = 100000;
+        NavMeshPath bestPath = new NavMeshPath();
+        for (int i = 0; i < sheepList.Count; i++)
+        {
+            if (sheepList[i].GetComponent<SheepAI>().isDead)
+            {
+                continue;
+            }
+            NavMeshPath path = new NavMeshPath();
+            NavMesh.CalculatePath(position, sheepList[i].transform.position, NavMesh.AllAreas, path);
+            float distance = 0;
+            for (int j = 0; j < path.corners.Length - 1; j++)
+            {
+                distance += (path.corners[j] - path.corners[j + 1]).magnitude;
+            }
+            if (distance < bestDistance)
+            {
+                bestDistance = distance;
+                bestPath = path;
+            }
+        }
+        return bestPath;
+    }
+    public static void checkForDamage(Vector3 position)
+    {
+        for (int i = 0;i < sheepList.Count; i++)
+        {
+            float distance = (position - sheepList[i].transform.position).magnitude;
+            if (distance < 1f)
+            {
+                sheepList[i].GetComponent<SheepAI>().damage();
+            }
+        }
+    }
+
+    public void damage()
+    {
+        if (lastDamage >= 0.5f)
+        {
+            health -= 20f;
+            lastDamage = 0f;
+            for (int i = 0; i < damagables.Length; i++)
+            {
+                damagables[i].material = damagedMaterial;
+            }
+            hit.Play();
+        }
+    }
     void Start()
     {
         state = State.standing;
         stopTimer = Utility.getRandomGuassian(5f, 1f);
+        soundTimer = Utility.getRandomGuassian(3f, 1f);
+        // TODO duality instead
+        sheepList.Add(gameObject);
+        mainMaterial = damagables[0].material;
+        audioSource.pitch = Utility.getRandomGuassian(1f, 0.1f);
     }
 
     void Update()
     {
-        if (grabTargetComponent.isFree())
+        if (soundTimer < 0f)
+        {
+            soundTimer = Utility.getRandomGuassian(3f, 1f);
+            audioSource.Play();
+        }
+        soundTimer -= Time.deltaTime;
+        if (health <= 0f)
+        {
+            isDead = true;
+        }
+        if (lastDamage < 0.5f)
+        {
+            lastDamage += Time.deltaTime;
+        }
+        if (lastDamage > 0.1f)
+        {
+            for (int i = 0; i < damagables.Length; i++)
+            {
+                if (damagables[i].material != mainMaterial)
+                {
+                    damagables[i].material = mainMaterial;
+                }
+            }
+        }
+        if (grabTargetComponent == null || grabTargetComponent.isFree())
         {
             if (state == State.standing)
             {
