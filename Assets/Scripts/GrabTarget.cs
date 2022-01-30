@@ -51,6 +51,11 @@ public class GrabTarget : MonoBehaviour
         velocity =  throwSpeed * possibleThrow;
     }
 
+    public bool isFree()
+    {
+        return isGrounded && holdPoint == null;
+    }
+
     void Start()
     {
     }

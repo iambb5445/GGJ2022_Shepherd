@@ -990,18 +990,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Sheep
       objectReference: {fileID: 0}
-    - target: {fileID: 2376308699392630483, guid: aa1b0e6960eb4cc429deed6d9233f785, type: 3}
-      propertyPath: throwTime
-      value: 0.05
-      objectReference: {fileID: 0}
-    - target: {fileID: 2376308699392630483, guid: aa1b0e6960eb4cc429deed6d9233f785, type: 3}
-      propertyPath: throwSpeed
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2376308699392630483, guid: aa1b0e6960eb4cc429deed6d9233f785, type: 3}
-      propertyPath: gravityCoefficient
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2376308699392630484, guid: aa1b0e6960eb4cc429deed6d9233f785, type: 3}
       propertyPath: m_RootOrder
       value: 3
