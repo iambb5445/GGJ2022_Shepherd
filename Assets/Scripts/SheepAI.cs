@@ -68,5 +68,9 @@ public class SheepAI : MonoBehaviour
             }
             Debug.Log(state);
         }
+        else
+        {
+            state = State.standing;
+        }
     }
 }
