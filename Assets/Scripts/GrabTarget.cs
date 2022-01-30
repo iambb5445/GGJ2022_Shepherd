@@ -17,12 +17,16 @@ public class GrabTarget : MonoBehaviour
     [SerializeField]
     float gravityCoefficient = 1f;
     [SerializeField]
-    float throwSpeed = 10f;
+    float throwSpeed = 1f;
+    [SerializeField]
+    float throwTime = 0.05f;
 
     Vector3 velocity;
     float gravity = -9.81f;
     bool isGrounded;
     Vector3 possibleThrow;
+    float totalInQueue = 0f;
+    Queue<KeyValuePair<Vector3, float>> queue = new Queue<KeyValuePair<Vector3, float>>();
 
     Transform holdPoint = null;
 
@@ -44,7 +48,7 @@ public class GrabTarget : MonoBehaviour
     public void release()
     {
         holdPoint = null;
-        velocity = possibleThrow * throwSpeed;
+        velocity =  throwSpeed * possibleThrow;
     }
 
     void Start()
@@ -70,8 +74,22 @@ public class GrabTarget : MonoBehaviour
         {
             Vector3 holdPosition = holdPoint.position;
             holdPosition = clampAboveGround(holdPosition);
-            possibleThrow = holdPosition - transform.position;
             transform.position = holdPosition;
+
+            queue.Enqueue(new KeyValuePair<Vector3, float>(transform.position, Time.deltaTime));
+            totalInQueue += Time.deltaTime;
+            while (totalInQueue > throwTime)
+            {
+                totalInQueue -= queue.Dequeue().Value;
+            }
+            if (queue.Count == 0)
+            {
+                possibleThrow = Vector3.zero;
+            }   
+            else
+            {
+                possibleThrow = (transform.position - queue.Peek().Key) / totalInQueue;
+            }
         }
         else
         {
