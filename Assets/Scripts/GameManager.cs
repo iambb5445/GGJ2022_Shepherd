@@ -97,7 +97,7 @@ public class GameManager : MonoBehaviour
         new Notif(15, "", "Very confusing..."),
         new Day(30, "L10"),
         new Night(30),
-        new Notif(15, "", "I promise, these levels are doable!"),
+        new Notif(15, "", "Good luck!"),
         new Day(30, "L11"),
         new Night(30),
     };
@@ -117,7 +117,7 @@ public class GameManager : MonoBehaviour
     }
     private void Update()
     {
-        timer -= Time.deltaTime * 5;
+        timer -= Time.deltaTime;
         timerText.text = ((int)timer).ToString();
         if (nightTrigger)
         {
