@@ -48,9 +48,10 @@ public class SheepAI : MonoBehaviour
     {
         float bestDistance = 100000;
         NavMeshPath bestPath = new NavMeshPath();
+        Debug.Log(sheepList.Count);
         for (int i = 0; i < sheepList.Count; i++)
         {
-            if (sheepList[i].GetComponent<SheepAI>().isDead)
+            if (sheepList[i].activeSelf == false)
             {
                 continue;
             }
@@ -73,6 +74,10 @@ public class SheepAI : MonoBehaviour
     {
         for (int i = 0;i < sheepList.Count; i++)
         {
+            if (sheepList[i].GetComponent<SheepAI>().isDead)
+            {
+                continue;
+            }
             float distance = (position - sheepList[i].transform.position).magnitude;
             if (distance < 1f)
             {
@@ -99,8 +104,6 @@ public class SheepAI : MonoBehaviour
         state = State.standing;
         stopTimer = Utility.getRandomGuassian(5f, 1f);
         soundTimer = Utility.getRandomGuassian(3f, 1f);
-        // TODO duality instead
-        sheepList.Add(gameObject);
         mainMaterial = damagables[0].material;
         audioSource.pitch = Utility.getRandomGuassian(1f, 0.1f);
     }
