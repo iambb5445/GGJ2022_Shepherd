@@ -71,7 +71,7 @@ public class GameManager : MonoBehaviour
         new Day(35, "L1", "You can drag and throw sheeps behind the fences.\nThe timer shows when the night comes."),
         new Night(20, "You can't move sheeps when night comes."),
         new Notif(10, "Wolves are around.", "Don't let the wolves kill the sheeps."),
-        new Day(30, "L2"),
+        new Day(30, "L2", "You can skip day or night or text by pressing L."),
         new Night(30, "Wolves are faster at night.\nRemember, you can't move the sheeps when the night comes."),
         new Notif(10, "The shepherd has an ability! Not so useful yet...", "Use Left Shift to temporarily change the time to night."),
         new Day(30, "L3", "Wolves are not faster at temporarily night."),
@@ -123,6 +123,10 @@ public class GameManager : MonoBehaviour
         if (ended)
         {
             return;
+        }
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            timer = 0;
         }
         timer -= Time.deltaTime;
         timerText.text = ((int)timer).ToString();
