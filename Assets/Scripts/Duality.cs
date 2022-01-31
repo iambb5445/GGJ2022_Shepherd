@@ -66,8 +66,8 @@ public class Duality : MonoBehaviour
             {
                 day.transform.position = night.transform.position;
                 day.transform.rotation = night.transform.rotation;
-                day.SetActive(true);
                 night.SetActive(false);
+                day.SetActive(true);
             }
         }
     }

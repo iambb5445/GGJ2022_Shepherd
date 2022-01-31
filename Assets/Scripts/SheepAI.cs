@@ -46,7 +46,7 @@ public class SheepAI : MonoBehaviour
     Material mainMaterial;
     public static NavMeshPath getNearestSheepPath(Vector3 position)
     {
-        float bestDistance = 100000;
+        float bestDistance = -1;
         NavMeshPath bestPath = new NavMeshPath();
         for (int i = 0; i < sheepList.Count; i++)
         {
@@ -61,7 +61,27 @@ public class SheepAI : MonoBehaviour
             {
                 distance += (path.corners[j] - path.corners[j + 1]).magnitude;
             }
-            if (distance < bestDistance)
+            bool isPathBetter = false;
+            if (bestDistance < 0)
+            {
+                isPathBetter = true;
+            }
+            else if (bestPath.status != NavMeshPathStatus.PathComplete)
+            {
+                if (path.status == NavMeshPathStatus.PathComplete)
+                {
+                    isPathBetter = true;
+                }
+                if (distance < bestDistance)
+                {
+                    isPathBetter = true;
+                }
+            }
+            else if (path.status == NavMeshPathStatus.PathComplete && distance < bestDistance)
+            {
+                isPathBetter = true;
+            }
+            if (isPathBetter)
             {
                 bestDistance = distance;
                 bestPath = path;

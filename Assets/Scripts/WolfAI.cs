@@ -73,7 +73,7 @@ public class WolfAI : MonoBehaviour
                     Vector3 movement = direction.normalized * Time.deltaTime * speed;
                     if (GameManager.isNight)
                     {
-                        speed *= 5;
+                        movement *= 5;
                     }
                     characterController.Move(movement);
                 }
