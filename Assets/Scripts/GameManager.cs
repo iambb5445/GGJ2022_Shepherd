@@ -92,7 +92,7 @@ public class GameManager : MonoBehaviour
         new Day(30, "L8"),
         new Night(30),
         new Notif(15, "", "Throw!"),
-        new Day(40, "L9"),
+        new Day(40, "L90"),
         new Night(30),
         new Notif(15, "", "Very confusing..."),
         new Day(30, "L10"),
@@ -103,7 +103,10 @@ public class GameManager : MonoBehaviour
     };
 
     float timer = 0f;
+    int total;
+    int aliveCount;
     public static bool isNight;
+    public static bool ended = false;
     public static bool nightTrigger;
     public static bool dayTrigger;
     public void skip()
@@ -117,6 +120,10 @@ public class GameManager : MonoBehaviour
     }
     private void Update()
     {
+        if (ended)
+        {
+            return;
+        }
         timer -= Time.deltaTime;
         timerText.text = ((int)timer).ToString();
         if (nightTrigger)
@@ -142,9 +149,17 @@ public class GameManager : MonoBehaviour
                 else if (previousLevel.levelType == Level.LevelType.Night)
                 {
                     isNight = false;
+                    updateScore();
                 }
             }
             levelIndex++;
+            if (levelIndex >= levels.Length)
+            {
+                notifObject.SetActive(true);
+                notifText.text = "<color=yellow>Score:" + aliveCount + " out of " + total + "animals saved!</color>";
+                SceneManager.LoadScene("Notif");
+                ended = true;
+            }
             Level currentLevel = levels[levelIndex];
             timer = currentLevel.time;
             if (currentLevel.levelType == Level.LevelType.Notif)
@@ -173,16 +188,18 @@ public class GameManager : MonoBehaviour
         }
         else if (isNight)
         {
-            int aliveCount = 0;
-            for (int i = 0; i < SheepAI.sheepList.Count; i++)
+        }
+    }
+    void updateScore()
+    {
+        total += SheepAI.sheepList.Count;
+        for (int i = 0; i < SheepAI.sheepList.Count; i++)
+        {
+            GameObject sheep = SheepAI.sheepList[i];
+            if (!sheep.GetComponent<SheepAI>().isDead)// && !WolfAI.wolfsCanReach(sheep.transform.position))
             {
-                GameObject sheep = SheepAI.sheepList[i];
-                if (!sheep.GetComponent<SheepAI>().isDead)// && !WolfAI.wolfsCanReach(sheep.transform.position))
-                {
-                    aliveCount++;
-                }
+                aliveCount++;
             }
-            float score = (float)(aliveCount) / (SheepAI.sheepList.Count);
         }
     }
 }
