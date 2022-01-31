@@ -74,6 +74,10 @@ public class GrabTarget : MonoBehaviour
 
     void Update()
     {
+        if (GameManager.nightTrigger)
+        {
+            notUnderTarget();
+        }
         isGrounded = Physics.CheckSphere(groundCheck.position, groundCheckDistance, groundLayerMask);
         if (holdPoint != null)
         {

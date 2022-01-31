@@ -48,7 +48,6 @@ public class SheepAI : MonoBehaviour
     {
         float bestDistance = 100000;
         NavMeshPath bestPath = new NavMeshPath();
-        Debug.Log(sheepList.Count);
         for (int i = 0; i < sheepList.Count; i++)
         {
             if (sheepList[i].activeSelf == false)
@@ -149,8 +148,11 @@ public class SheepAI : MonoBehaviour
                     destination = hitInfo.point;
 
                     NavMesh.CalculatePath(transform.position, destination, NavMesh.AllAreas, path);
-                    state = State.cornerCalculate;
-                    navmeshIndex = 1;
+                    if (path.status == NavMeshPathStatus.PathComplete)
+                    {
+                        state = State.cornerCalculate;
+                        navmeshIndex = 1;
+                    }
                 }
             }
             else if (state == State.cornerCalculate)
